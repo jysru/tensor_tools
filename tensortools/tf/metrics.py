@@ -5,7 +5,7 @@ def pearson(y_true: tf.Tensor, y_pred: tf.Tensor, squared: bool = False, inverse
     y_true, y_pred = tf.math.abs(y_true), tf.math.abs(y_pred)
     if squared:
         y_true, y_pred = tf.math.square(y_true), tf.math.square(y_pred)
-    s = tf.math.reduce_sum((y_true - tf.math.reduce_mean(y_true)) * (y_pred - tf.math.reduce_mean(y_pred)) / tf.cast(tf.size(y_true), tf.float32))
+    s = tf.math.reduce_sum((y_true - tf.math.reduce_mean(y_true)) * (y_pred - tf.math.reduce_mean(y_pred)) / tf.cast(tf.size(y_true), y_true.dtype))
     p = s / (tf.math.reduce_std(y_true) * tf.math.reduce_std(y_pred))
     return 1 - p if inversed else p
 
