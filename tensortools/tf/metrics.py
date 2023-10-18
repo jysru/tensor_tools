@@ -1,5 +1,3 @@
-import numpy as np
-import torch
 import tensorflow as tf
 
 
@@ -12,50 +10,36 @@ def pearson(y_true: tf.Tensor, y_pred: tf.Tensor, squared: bool = False, inverse
     return 1 - p if inversed else p
 
 
-def quality_torch(x, y, inversed: bool = True, squared: bool = True):
-        prod = torch.sum(x * torch.conj(y))
-        norm = torch.sum(torch.abs(x) * torch.abs(y))
-        q = torch.abs(prod / norm)
-
-        if squared:
-            q = torch.square(q)
-        if inversed:
-            q = 1 - q
-        return q
-
-
-def mae_numpy(x: np.ndarray, y: np.ndarray):
+def mae(x: tf.Tensor, y: tf.Tensor) -> tf.Tensor:
     """Return the mean absolute error between the two arrays."""
-    if np.iscomplexobj(x):
-        x = np.abs(x)
-    if np.iscomplexobj(y):
-        y = np.abs(y)
-    return np.mean(np.abs(x - y))
+    if tf.is_complex(x):
+        x = tf.math.abs(x)
+    if tf.is_complex(y):
+        y = tf.math.abs(y)
+    return tf.math.reduce_mean(tf.math.abs(x - y))
 
 
-def mse_numpy(x: np.ndarray, y: np.ndarray):
+def mse(x: tf.Tensor, y: tf.Tensor) -> tf.Tensor:
     """Return the mean square error between the two arrays."""
-    if np.iscomplexobj(x):
-        x = np.abs(x)
-    if np.iscomplexobj(y):
-        y = np.abs(y)
-    return np.mean(np.square(x - y))
+    if tf.is_complex(x):
+        x = tf.math.abs(x)
+    if tf.is_complex(y):
+        y = tf.math.abs(y)
+    return tf.math.square_mean(tf.math.abs(x - y))
 
 
-def dot_product_numpy(x: np.ndarray, y: np.ndarray, normalized: bool = True):
+def dot_product(x: tf.Tensor, y: tf.Tensor, normalized: bool = True) -> tf.Tensor:
     """Return the scalar product between the two complex arrays."""
-    prod = np.sum(x * np.conjugate(y))
-    norm = np.sum(np.abs(x) * np.abs(y))
+    prod = tf.math.reduce_sum(x * tf.math.conj(y))
+    norm = tf.math.reduce_sum(tf.math.abs(x) * tf.math.abs(y))
     return prod / norm if normalized else prod
 
 
-def quality_numpy(x: np.ndarray, y: np.ndarray, squared: bool = True, inversed: bool = False):
+def quality(x: tf.Tensor, y: tf.Tensor, squared: bool = True, inversed: bool = False) -> tf.Tensor:
     """Return the magnitude of the normalized dot product between the two complex arrays."""
-    q = np.abs(dot_product_numpy(x, y, normalized=True))
+    q = tf.math.abs(dot_product(x, y, normalized=True))
     if squared:
-        q = np.square(q)
-    if inversed:
-        q = 1 - q
-    return q
+        q = tf.math.square(q)
+    return 1 - q if inversed else q
 
 
