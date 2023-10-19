@@ -12,26 +12,20 @@ def pearson(y_true: tf.Tensor, y_pred: tf.Tensor, squared: bool = False, inverse
 
 def mae(x: tf.Tensor, y: tf.Tensor) -> tf.Tensor:
     """Return the mean absolute error between the two arrays."""
-    if tf.is_complex(x):
-        x = tf.math.abs(x)
-    if tf.is_complex(y):
-        y = tf.math.abs(y)
+    x, y = tf.math.abs(x), tf.math.abs(y)
     return tf.math.reduce_mean(tf.math.abs(x - y))
 
 
 def mse(x: tf.Tensor, y: tf.Tensor) -> tf.Tensor:
     """Return the mean square error between the two arrays."""
-    if tf.is_complex(x):
-        x = tf.math.abs(x)
-    if tf.is_complex(y):
-        y = tf.math.abs(y)
-    return tf.math.square_mean(tf.math.abs(x - y))
+    x, y = tf.math.abs(x), tf.math.abs(y)
+    return tf.math.reduce_mean(tf.math.square(tf.math.abs(x - y)))
 
 
 def dot_product(x: tf.Tensor, y: tf.Tensor, normalized: bool = True) -> tf.Tensor:
     """Return the scalar product between the two complex arrays."""
     prod = tf.math.reduce_sum(x * tf.math.conj(y))
-    norm = tf.math.reduce_sum(tf.math.abs(x) * tf.math.abs(y))
+    norm = tf.cast(tf.math.reduce_sum(tf.math.abs(x) * tf.math.abs(y)), prod.dtype)
     return prod / norm if normalized else prod
 
 
