@@ -29,7 +29,7 @@ def dot_product(x: tf.Tensor, y: tf.Tensor, normalized: bool = True) -> tf.Tenso
     return prod / norm if normalized else prod
 
 
-def quality(x: tf.Tensor, y: tf.Tensor, squared: bool = True, inversed: bool = False) -> tf.Tensor:
+def quality(x: tf.Tensor, y: tf.Tensor, squared: bool = False, inversed: bool = False) -> tf.Tensor:
     """Return the magnitude of the normalized dot product between the two complex arrays."""
     q = tf.math.abs(dot_product(x, y, normalized=True))
     if squared:

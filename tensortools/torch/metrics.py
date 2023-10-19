@@ -29,7 +29,7 @@ def dot_product(x: torch.Tensor, y: torch.Tensor, normalized: bool = True) -> to
     return prod / norm if normalized else prod
 
 
-def quality(x: torch.Tensor, y: torch.Tensor, squared: bool = True, inversed: bool = True) -> torch.float:
+def quality(x: torch.Tensor, y: torch.Tensor, squared: bool = False, inversed: bool = False) -> torch.float:
     """Return the magnitude of the normalized dot product between the two complex arrays."""
     q = torch.abs(dot_product(x, y, normalized=True))
     if squared:
