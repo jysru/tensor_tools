@@ -8,7 +8,6 @@ def fft2(field: np.ndarray, normalize: bool = True) -> np.ndarray:
 
 def ifft2(field: np.ndarray, normalize: bool = True) -> np.ndarray:
     ift = np.fft.ifftshift(np.fft.ifft2(np.fft.ifftshift(field)))
-    ift = ift * np.sqrt(field.size)
     return ift * np.sqrt(ift.size) if normalize else ift
 
 
@@ -28,7 +27,7 @@ def ffrt2(field: np.ndarray,
 
 def compute_frt_propagator(size: tuple[int], dz: float, pixel_size: float, wavelength: float) -> np.ndarray:
     _, _, kx, ky = compute_fft_grids(size, pixel_size)
-    return dz * np.sqrt(np.abs(4 * np.square(np.pi/wavelength) - np.square(kx) - np.square(ky)))
+    return np.exp(1j * dz * np.sqrt(np.abs(4 * np.square(np.pi/wavelength) - np.square(kx) - np.square(ky))))
 
 
 def compute_fft_grids(size: tuple[int], pixel_size: float) -> tuple[np.array]:
