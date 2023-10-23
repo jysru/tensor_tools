@@ -41,7 +41,7 @@ def resize_2d(feature_map: np.ndarray, new_shape: tuple[int]) -> np.ndarray:
         raise NotImplementedError('Invalid new_shape')
 
 
-def pooling_2d(feature_map: np.ndarray, kernel: tuple = (2, 2), func: callable = np.max) -> np.ndarray:
+def pooling_2d(feature_map: np.ndarray, kernel: tuple[int] = (2, 2), func: callable = np.max) -> np.ndarray:
     """
     Applies 2D pooling to a feature map.
 
@@ -80,9 +80,9 @@ def pooling_2d(feature_map: np.ndarray, kernel: tuple = (2, 2), func: callable =
     return pooled
 
 
-def max_pooling_2d(feature_map: np.ndarray, kernel: tuple = (2, 2)) -> np.ndarray:
+def max_pooling_2d(feature_map: np.ndarray, kernel: tuple[int] = (2, 2)) -> np.ndarray:
     return pooling_2d(feature_map, kernel, func=np.max)
 
 
-def avg_pooling_2d(feature_map: np.ndarray, kernel: tuple = (2, 2)) -> np.ndarray:
+def avg_pooling_2d(feature_map: np.ndarray, kernel: tuple[int] = (2, 2)) -> np.ndarray:
     return pooling_2d(feature_map, kernel, func=np.mean)
