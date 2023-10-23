@@ -2,6 +2,45 @@ import numpy as np
 
 
 
+def crop_2d(feature_map: np.ndarray, new_shape: tuple[int]) -> np.ndarray:
+    feature_shape = feature_map.shape
+    img_shape = (feature_shape[-2], feature_shape[-1])
+    lines_idx, lines_ceil = int(np.floor((img_shape[0] - new_shape[0]) / 2)), int(np.ceil((img_shape[0] - new_shape[0]) / 2))
+    cols_idx, cols_ceil = int(np.floor((img_shape[1] - new_shape[1]) / 2)), int(np.ceil((img_shape[1] - new_shape[1]) / 2))
+    add_line = 1 if lines_ceil != lines_idx else 0
+    add_col = 1 if cols_ceil != cols_idx else 0
+    feature_map = feature_map[..., lines_idx:(-lines_idx -add_line), cols_idx:(-cols_idx -add_col)]
+    return feature_map
+
+
+def extend_2d(feature_map: np.ndarray, new_shape: tuple[int]) -> np.ndarray:
+    feature_shape = feature_map.shape
+    img_shape = (feature_shape[-2], feature_shape[-1])
+    lines_idx, lines_ceil = int(np.floor((new_shape[0] - img_shape[0]) / 2)), int(np.ceil((new_shape[0] - img_shape[0]) / 2))
+    cols_idx, cols_ceil = int(np.floor((new_shape[1] - img_shape[1]) / 2)), int(np.ceil((new_shape[1] - img_shape[1]) / 2))
+    add_line = 1 if lines_ceil != lines_idx else 0
+    add_col = 1 if cols_ceil != cols_idx else 0
+    if feature_map.ndim == 3:
+        feature_map = np.pad(feature_map, ((0, 0), (lines_idx, lines_idx + add_line), (cols_idx, cols_idx + add_col)))
+    elif feature_map.ndim == 2:
+        feature_map = np.pad(feature_map, ((lines_idx, lines_idx + add_line), (cols_idx, cols_idx + add_col)))
+    else:
+        raise ValueError("Invalid feature map dimensionality")
+    return feature_map
+
+
+def resize_2d(feature_map: np.ndarray, new_shape: tuple[int]) -> np.ndarray:
+    img_shape = np.array([feature_map.shape[-2], feature_map.shape[-1]])
+    if np.all(new_shape > img_shape):
+        return extend_2d(feature_map, new_shape)
+    elif np.all(new_shape < img_shape):
+        return crop_2d(feature_map, new_shape)
+    elif np.all(img_shape == new_shape):
+        return feature_map
+    else:
+        raise NotImplementedError('Invalid new_shape')
+
+
 def pooling_2d(feature_map: np.ndarray, kernel: tuple = (2, 2), func: callable = np.max) -> np.ndarray:
     """
     Applies 2D pooling to a feature map.
